@@ -1,14 +1,15 @@
 package com.itb.lip2.academicologininf3bn.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.itb.lip2.academicologininf3bn.model.Usuario;
 import com.itb.lip2.academicologininf3bn.service.UsuarioService;
@@ -21,36 +22,44 @@ import com.itb.lip2.academicologininf3bn.service.UsuarioService;
 @RestController
 @RequestMapping("/academico/api/v1")
 public class UseController {
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@GetMapping("/users")
-	public List<Usuario> getUsers() {
-		
-		List <Usuario>usuarios = new ArrayList<Usuario>();
-		
-		Usuario u1 = new Usuario();
-		u1.setId(1l);
-		u1.setNome("Neytan");
-		u1.setEmail("Neytan@gmail.com");
-		
-		Usuario u2 = new Usuario();
-		u2.setId(2l);
-		u2.setNome("Andre");
-		u2.setEmail("Andre@gmail.com");
-		
-		usuarios.add(u1);
-		usuarios.add(u2);
-	
-		
-		return usuarios;
-		
+	public ResponseEntity<List<Usuario>> getUsers() {
+
+
+		//
+
+		return ResponseEntity.ok().body(usuarioService.findAll());
+
 	}
-	
-	
+
+	@PostMapping("/users")
 	public ResponseEntity<Usuario> saveUser(@RequestBody Usuario usuario) {
-		return ResponseEntity.ok().body(usuarioService.save(usuario));
+		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/academico/api/v1/users").toString());
+
+		return ResponseEntity.created(uri).body(usuarioService.save(usuario));
 	}
+
+	@GetMapping("/users/{id}")
+	public ResponseEntity<Usuario> findUsuarioById(@PathVariable(value = "id") Long id) {
+
+		return ResponseEntity.ok().body(usuarioService.findById(id).get());
+	}
+
+	@PutMapping("/users/{id}")
+	public ResponseEntity<Object> updateUser(@RequestBody Usuario usuario, @PathVariable(value = "id") Long id) {
+
+		try{
+			//URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/acade"))
+			return ResponseEntity.ok().body(usuarioService.update(id, usuario));
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+
+	}
+
 
 }

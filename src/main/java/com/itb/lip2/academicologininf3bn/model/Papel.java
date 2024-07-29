@@ -17,7 +17,7 @@ public class Papel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nomePapel;
-	private String descriçãoPapel;
+	private String descricaoPapel;
 	private boolean codStatusPapel;
 	public Long getId() {
 		return id;
@@ -31,12 +31,15 @@ public class Papel {
 	public void setNomePapel(String nomePapel) {
 		this.nomePapel = nomePapel;
 	}
-	public String getDescriçãoPapel() {
-		return descriçãoPapel;
+
+	public String getDescricaoPapel() {
+		return descricaoPapel;
 	}
-	public void setDescriçãoPapel(String descriçãoPapel) {
-		this.descriçãoPapel = descriçãoPapel;
+
+	public void setDescricaoPapel(String descricaoPapel) {
+		this.descricaoPapel = descricaoPapel;
 	}
+
 	public boolean isCodStatusPapel() {
 		return codStatusPapel;
 	}

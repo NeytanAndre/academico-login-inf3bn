@@ -1,22 +1,27 @@
 package com.itb.lip2.academicologininf3bn.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table (name = "usuarios")
-public class Usuario {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipoUsuario", discriminatorType = DiscriminatorType.STRING )
+@EnableJpaAuditing
+@JsonTypeInfo(use  = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipoUsuario")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = Aluno.class, name = "Aluno"),
+        @JsonSubTypes.Type(value = Professor.class, name = "Professor"),
+		@JsonSubTypes.Type(value = Funcionario.class, name = "Funcionario")
+})
+public abstract class Usuario {
 	
 	@Id  //PK
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)  //Auto-Incremento
@@ -24,6 +29,9 @@ public class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
+
+	@Column(insertable = false, updatable = false)
+	@JsonIgnore
 	private String tipoUsuario;
 	private boolean codStatusUsuario;
 	
@@ -37,7 +45,20 @@ public class Usuario {
 			 inverseJoinColumns = @JoinColumn(name="papel_id", referencedColumnName = "id")   // Fk
 			)
 	private Collection<Papel> papeis; //coleção de papeis
-	
+
+	public Usuario() {
+
+
+	}
+
+	public Usuario(Long id, String nome, String email, String senha, Collection<Papel> papeis) {
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.papeis = papeis;
+	}
+
 	public Long getId() {
 		return id;
 	}
