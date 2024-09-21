@@ -1,8 +1,13 @@
 package com.itb.lip2.academicologininf3bn.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "Professor")
@@ -10,6 +15,9 @@ public class Professor extends Usuario {
 
     private int pontuacao;
     private String nivelProfissional;
+    @OneToMany(mappedBy = "professor")
+    @JsonIgnore                                              // Um professor possui vários cursos
+    private List<Curso> cursos = new ArrayList<Curso>();     // Na api, ignoramos um lado da relação para evitar o looping infinito
 
     public Professor(){
 

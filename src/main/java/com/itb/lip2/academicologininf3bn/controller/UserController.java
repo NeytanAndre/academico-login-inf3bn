@@ -1,10 +1,11 @@
 package com.itb.lip2.academicologininf3bn.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import com.itb.lip2.academicologininf3bn.model.Aluno;
+import com.itb.lip2.academicologininf3bn.model.Funcionario;
+import com.itb.lip2.academicologininf3bn.model.Professor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import com.itb.lip2.academicologininf3bn.service.UsuarioService;
 
 @RestController
 @RequestMapping("/academico/api/v1")
-public class UseController {
+public class UserController {
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -35,12 +36,34 @@ public class UseController {
 		return ResponseEntity.ok().body(usuarioService.findAll());
 
 	}
-
+/*
+Agora, para provr o login criamos um save
 	@PostMapping("/users")
 	public ResponseEntity<Usuario> saveUser(@RequestBody Usuario usuario) {
 		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/academico/api/v1/users").toString());
 
 		return ResponseEntity.created(uri).body(usuarioService.save(usuario));
+	}
+
+ */
+	@PostMapping("/users/professor")
+	public ResponseEntity<Usuario> saveProfessor(@RequestBody Professor professor) {
+		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/academico/api/v1/professor").toString());
+
+		return ResponseEntity.created(uri).body(usuarioService.saveProfessor(professor));
+	}
+
+	@PostMapping("/users/aluno")
+	public ResponseEntity<Usuario> saveAluno(@RequestBody Aluno aluno) {
+		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/academico/api/v1/aluno").toString());
+
+		return ResponseEntity.created(uri).body(usuarioService.saveAluno(aluno));
+	}
+	@PostMapping("/users/funcionario")
+	public ResponseEntity<Usuario> saveFuncionario(@RequestBody Funcionario funcionario) {
+		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/academico/api/v1/funcionario").toString());
+
+		return ResponseEntity.created(uri).body(usuarioService.saveFuncionario(funcionario));
 	}
 
 	@GetMapping("/users/{id}")
