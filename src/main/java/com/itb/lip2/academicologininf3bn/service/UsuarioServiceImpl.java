@@ -118,8 +118,10 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 	@Override
 	public Papel savePapel(Papel papel) {
+		papel.setCodStatusPapel(true);
 		return papelRepository.save(papel);
 	}
+
 
 	@Override
 	public void addPapelToUsuario(Usuario usuario, String papelNome) {
